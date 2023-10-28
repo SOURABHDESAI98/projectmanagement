@@ -10,8 +10,6 @@ export const loginUser = (form, navigate) => async (dispatch) => {
     if (userdata.success) {
       dispatch({ type: LOGIN_SUCCESS_DATA, payload: userdata.message })
       navigate("/dashboard")
-      //  let token = userdata.token
-      //  localStorage.setItem('token-techprime',JSON.stringify(token))
     }
     else {
       dispatch({ type: LOGIN_FAILURE_DATA, payload: userdata.message })

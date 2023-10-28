@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { Box, Heading, Text } from "@chakra-ui/react";
-import "../styles/DashboardSlider.css"
+import "../styles/DashSlideComponent.css"
 
-export const DashboardSlider = ({ total, closed, running, closure, cancelled }) => {
+export const DashSlideComponent = ({ total, closed, running, closure, cancelled }) => {
 
     let box = document.querySelector('.product-container');
     const ref = useRef(null);

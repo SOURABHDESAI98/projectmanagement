@@ -1,4 +1,4 @@
-import { FAILURE_DATA, REQUEST_DATA, POST_SUCCESS_DATA, GET_SUCCESS_DATA, GET_COUNTS_DATA, GET_CHARTS_DATA } from "./ActionTypes";
+import { FAILURE_DATA, REQUEST_DATA, POST_SUCCESS_DATA, GET_SUCCESS_DATA, GET_COUNTS_DATA, GET_CHARTS_DATA,GET_DROPDOWN_DATA } from "./ActionTypes";
 
 const initState = {
     isLoading:false,
@@ -11,7 +11,8 @@ const initState = {
     closure:"",
     cancelled:"",
     chartsTotal:[],
-    chartsClosed:[]
+    chartsClosed:[],
+    dropdownObject:null // for insert project page
 }
 
 export const ProjectReducer = (state=initState,action) =>{
@@ -66,6 +67,12 @@ export const ProjectReducer = (state=initState,action) =>{
             ...state,
             isLoading:false,
             isError:true,
+        } 
+    }
+    case GET_DROPDOWN_DATA:{
+        return {
+            ...state,
+            dropdownObject:action.payload
         } 
     }
     default: {

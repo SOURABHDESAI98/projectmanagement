@@ -2,7 +2,7 @@ import { Box, Image } from '@chakra-ui/react';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-const SideBar = ({ src1, src2, src3, prop1, prop2, prop3, prop4, prop5, prop6 }) => {
+const SideNavBar = ({ src1, src2, src3, prop1, prop2, prop3, prop4, prop5, prop6 }) => {
     return (
         <Box width={{sm:"0px",md:"15%",base:"0px",lg:"6%",xl:"6%"}} display={'flex'} backgroundColor={'white'} flexDirection={'column'} justifyContent={'center'} alignItems={'center'} height={"100vh"} boxShadow={'rgba(0, 0, 0, 0.1) 0px 0px 5px 0px, rgba(0, 0, 0, 0.1) 0px 0px 1px 0px'}>
             <Box height={{sm:"0px",md:"45vh",base:"0vh",lg:'85vh',xl:'85vh'}} display={'flex'} gap={'30px'} flexDirection={'column'} justifyContent={{sm:"center",md:"flex-start",base:"center",lg:"center",xl:"center"}} alignItems={"center"}>
@@ -27,4 +27,4 @@ const SideBar = ({ src1, src2, src3, prop1, prop2, prop3, prop4, prop5, prop6 })
     );
 };
 
-export default SideBar;
+export default SideNavBar;

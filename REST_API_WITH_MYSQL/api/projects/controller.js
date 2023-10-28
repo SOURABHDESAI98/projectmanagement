@@ -1,6 +1,8 @@
-const { create, getProjects, loginUser, updateProjectStatus, getChartsTotal, getChartsClosed,getCounts } = require("./service");
+const { create, getProjects, loginUser, updateProjectStatus, getChartsTotal, getChartsClosed, getCounts, getSearchedResults, getReasonDropdown, getTypeDropdown, getDivisionDropdown, getCategoryDropdown, getPriorityDropdown, getDepartmentDropdown, getLocationDropdown, getDropdownData } = require("./service");
 let chartsObj;
 let totalProjects;
+
+let reason, type, division, category, priority, department, location;
 
 module.exports = {
     createProject: (req, res) => { // req comes from axios.post("link",object), this object is req.body
@@ -44,19 +46,57 @@ module.exports = {
         });
     },
     getProjects: (req, res) => {
-        getProjects((err, results) => {
+        const { sort, offsetValue } = req.params;
+        const offset = parseInt(offsetValue, 10);
+        //  console.log("sort", sort);
+        //  console.log("offset", offset);
+
+        getProjects(sort, offset, (err, results) => {
             if (err) {
                 console.log(err);
                 return;
             }
+            // return res.json({
+            //     success: true,
+            //     data: results
+            // });
+
             return res.json({
-                success: true,
-                data: results
+                result: results,
+                //  pageCount:Math.ceil((results.length)/10)   
+                pageCount: 5
+            });
+        })
+    },
+
+    getSearchedResults: (req, res) => {
+        const { text, sort } = req.params;
+        // adding % here for pattern matching in sql query
+        let textInput = text + "%";
+
+        // console.log("text", text);
+        // console.log("sort", sort);
+        // console.log("textInput", textInput);
+
+        getSearchedResults(textInput, sort, (err, results) => {
+            if (err) {
+                console.log(err);
+                return;
+            }
+            // return res.json({
+            //     success: true,
+            //     data: results
+            // });
+            console.log(`showing search results for "${text}"`);
+            return res.json({
+                result: results,
+                //  pageCount:Math.ceil((results.length)/10)   
+                pageCount: 5
             });
         })
     },
     updateProjectStatus: (req, res) => {
-        const body = req.body;
+        const body = req.body;// body={id:intValue,proname:"proname"}
         updateProjectStatus(body, (err, results) => {
             if (err) {
                 console.log(err);
@@ -68,7 +108,7 @@ module.exports = {
                     message: "failed to update user"
                 });
             }
-            console.log("results object", results);
+            console.log(`status of project "${body.proname}" is changed`);
             return res.json({
                 success: true,
                 message: "project status updated successfully"
@@ -121,8 +161,8 @@ module.exports = {
         });
     },
 
-    getCounts :(req,res)=>{
-        getCounts((err,results)=>{
+    getCounts: (req, res) => {
+        getCounts((err, results) => {
             if (err) {
                 console.log(err);
                 return;
@@ -131,11 +171,33 @@ module.exports = {
 
             const countsArray = results.slice(0, 5).map(item => {
                 return Object.values(item[0])[0];
-              });
-              
-              console.log(countsArray);
-              return res.json(countsArray);
-           // return res.json(results);
+            });
+
+            console.log(countsArray);
+            return res.json(countsArray);
+            // return res.json(results);
         });
+    },
+    getDropdownData: (req, res) => {
+
+        getDropdownData((err, results) => {
+            if (err) {
+                console.log(err);
+                return;
+            }
+            let dropdownObj = {
+                        reason: results[0],
+                        type: results[1],
+                        division: results[2],
+                        category: results[3],
+                        priority: results[4],
+                        department: results[5],
+                        location:results[6]
+                    }
+
+
+            return res.json( dropdownObj);
+        });
+
     }
 }

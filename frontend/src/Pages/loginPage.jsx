@@ -1,11 +1,11 @@
 import { Box, Image, Input, Text } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
-import '../styles/Login.css'
+import '../styles/loginPage.css'
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { loginUser } from '../Redux/user/userAction';
 
-const Login = () => {
+const LoginComponent = () => {
     const [show, setShow] = useState(false);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -77,7 +77,7 @@ const Login = () => {
                     </div>
                     <div style={{display:"flex",justifyContent:"space-between",marginBottom:"5px"}}>
                        {password === "" ? <Text className='error-label' fontSize={'15px'}>Password is required</Text> : null}
-                       <span style={{color:"#4871f7", fontSize:"14px"}}>Forgot password?</span>
+                   <span onClick={()=>{alert("check your email to change password")}} style={{color:"#4871f7", fontSize:"14px"}}>Forgot password?</span>  
                     </div>
                     <br />
                     {message === "Invalid User" && screenSize.width<=640 || message === "Invalid Password" && screenSize.width<=640 ? <Text textAlign={'start'} mb={"5px"} fontSize={'15px'} color={'red'}>Invalid Credentials</Text> : null}
@@ -92,4 +92,4 @@ const Login = () => {
     );
 };
 
-export default Login;
+export default LoginComponent;

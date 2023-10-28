@@ -3,7 +3,7 @@ import React from 'react';
 import { IoIosArrowBack } from "react-icons/io";
 import { Link } from 'react-router-dom';
 
-const TopBar = ({ title, path, screenWidth }) => {
+const LogoComponent = ({ title, path, screenWidth }) => {
     return (
         <div>
             <Box>
@@ -31,4 +31,4 @@ const TopBar = ({ title, path, screenWidth }) => {
     );
 };
 
-export default TopBar;
+export default LogoComponent;

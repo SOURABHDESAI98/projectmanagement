@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import SideBar from '../Components/SideBar';
+import SideNavBar from '../Components/SideNavBar';
 import { Box, Heading, SimpleGrid, Text } from '@chakra-ui/react';
-import TopBar from '../Components/TopBar';
+import LogoComponent from '../Components/LogoComponent';
 import { useDispatch, useSelector } from 'react-redux';
-import { getAllCounts, getChartsData } from '../Redux/project/Action';
+import { getSliderCounts, getChartsData } from '../Redux/project/Action';
 import Highcharts, { chart } from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
 
-import "../styles/dashboard.css";
-import BottomSidebar from '../Components/BottomSidebar';
-import { DashboardSlider } from '../Components/DashboardSlider';
+import "../styles/dashboardPage.css";
+import BottomNavbar from '../Components/BottomNavbar';
+import { DashSlideComponent } from '../Components/DashSlideComponent';
 
-const Dashboard = () => {
+const DashboardComponent = () => {
     const { total, closed, cancelled, running, closure } = useSelector(store => store.project);// for dashboard slider
     const { chartsTotal, chartsClosed } = useSelector(store => store.project);
     const dispatch = useDispatch();
@@ -42,13 +42,12 @@ const Dashboard = () => {
     // -------------api calls------------------------//
 
     useEffect(() => {
-        dispatch(getAllCounts())
+        dispatch(getSliderCounts())
     }, [])
 
     useEffect(() => {
         dispatch(getChartsData());
     }, [])
-
 
      
     const options = {
@@ -64,11 +63,11 @@ const Dashboard = () => {
         xAxis: {
             categories: [
                 'STR',
-                'FIN',
-                'QLT',
-                'MAN',
-                'STO',
                 'HR',
+                'FIN',
+                'STO',
+                'MAI',
+                'QUA',
             ],
             crosshair: true,
 
@@ -128,9 +127,9 @@ const Dashboard = () => {
 
     return (
         <Box display={"flex"} flexDirection={{ sm: "column", md: "row", base: "column", lg: "row", xl: "row" }} gap={{ sm: "0px", base: "0px", md: "2px", lg: "2px", xl: "2px" }} justifyContent={"space-between"}>
-            {screenSize.width > 640 ? <SideBar prop1={"5px solid #1b5cbf"} prop2={"20px"} prop3={""} prop4={""} prop5={""} prop6={""} src1={"/images/Dashboard-active.jpg"} src2={'/images/Project-list.jpg'} src3={'/images/create-project.jpg'} /> : null}
+            {screenSize.width > 640 ? <SideNavBar prop1={"5px solid #1b5cbf"} prop2={"20px"} prop3={""} prop4={""} prop5={""} prop6={""} src1={"/images/Dashboard-active.jpg"} src2={'/images/Project-list.jpg'} src3={'/images/create-project.jpg'} /> : null}
             <Box mb={"80px"}>
-                <TopBar title={'Dashboard'} screenWidth={screenSize.width} />
+                <LogoComponent title={'Dashboard'} screenWidth={screenSize.width} />
                 <Box width={{sm:"98%",base:"98%",md:"95%",lg:"95%",xl:"95%"}} m={'auto'} p={{sm:"5px 10px", md:"20px 20px 50px 20px",base:"5px 10px", lg:'20px 20px 50px 20px',xl:'20px 20px 50px 20px'}} borderRadius={'10px'} color={'gray'} position={{ sm: "", base: "", md: "absolute", lg: "absolute", xl: 'absolute' }} zIndex={{ sm: "", base: "", md: "100", lg: "100", xl: '100' }} top={{sm:"0px",md:"10%",base:"0px",lg:'17%',xl:'17%'}} left={{sm:"0px",md:"6.8%",base:"0px",lg:"5%",xl:"5%"}}>
                     {
                         screenSize.width > 640 ?
@@ -157,7 +156,7 @@ const Dashboard = () => {
                                 </Box>
                             </SimpleGrid>
                             : 
-                            <DashboardSlider total={total} closed={closed} running={running} cancelled={cancelled} closure={closure}/>
+                            <DashSlideComponent total={total} closed={closed} running={running} cancelled={cancelled} closure={closure}/>
                     }
                 </Box>
                 <Text fontSize={'22px'} fontWeight={'500'} mt={{sm:"10px",base:"10px",md:"70px",lg:"50px",xl:"50px"}} textAlign={'start'} p={'20px'}>Department wise - Total Vs Closed</Text>
@@ -168,9 +167,9 @@ const Dashboard = () => {
                     />
                 </Box>
             </Box>
-            {screenSize.width <= 640 ? <BottomSidebar prop1={"5px solid #1b5cbf"} prop2={"20px"} prop3={""} prop4={""} prop5={""} prop6={""} src1={"/images/Dashboard-active.jpg"} src2={'/images/Project-list.jpg'} src3={'/images/create-project.jpg'} /> : null}
+            {screenSize.width <= 640 ? <BottomNavbar prop1={"5px solid #1b5cbf"} prop2={"20px"} prop3={""} prop4={""} prop5={""} prop6={""} src1={"/images/Dashboard-active.jpg"} src2={'/images/Project-list.jpg'} src3={'/images/create-project.jpg'} /> : null}
         </Box>
     );
 };
 
-export default Dashboard;
+export default DashboardComponent;

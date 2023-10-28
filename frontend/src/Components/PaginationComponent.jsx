@@ -1,7 +1,7 @@
 import { Button } from "@chakra-ui/react";
-import "../styles/Pagination.css";
+import "../styles/PaginationComponent.css";
 import { MdChevronLeft, MdChevronRight, MdKeyboardDoubleArrowLeft, MdKeyboardDoubleArrowRight } from "react-icons/md";
-export const Pagination = ({ totalPage, page, onChange }) => {
+export const PaginationComponent = ({ totalPage, page, onChange }) => {
     const pages = new Array(totalPage).fill(0).map((a, i) =>
         <Button key={i} borderRadius={"50%"} backgroundColor={page===i+1 ? "#32d6e9" : "transparent"} color={page===i+1 ? "white" : "black"} _hover={{backgroundColor:"transparent", color:"black"}} onClick={() => onChange(i + 1)} disabled={page === (i + 1)}>{i + 1}</Button>
     )
