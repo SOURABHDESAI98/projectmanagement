@@ -1,4 +1,5 @@
 import axios from "axios";
+import { Navigate } from "react-router-dom";
 import { FAILURE_DATA, GET_CHARTS_DATA, GET_COUNTS_DATA, GET_SUCCESS_DATA, POST_SUCCESS_DATA,GET_DROPDOWN_DATA } from "./ActionTypes";
 
 export const createNewProject = (formData,navigate) => async (dispatch) => {//for insert page
@@ -72,7 +73,8 @@ export const getSliderCounts = () => async (dispatch) => {//for dashboard page
      let response = await axios.get('http://localhost:3000/api/projects/getCounts');
     
      let data = response.data;
-     console.log(data);
+     console.log(data);// this is array of all counts
+  
      dispatch({type:GET_COUNTS_DATA,payload:{
         total:data[0],
         closed:data[1],

@@ -1,16 +1,14 @@
 const {createProject,loginUser,getProjects,updateProjectStatus,getChartsData,getCounts,getSearchedResults,getDropdownData}=require("./controller");
 const router=require("express").Router();
+const {checkToken}=require("../../auth/token_validation");
 
-let sort="abc";
-let offsetValue=0;
-
-router.post("/createProject",createProject);
+router.post("/createProject",checkToken, createProject);
 router.get(`/:sort/:offsetValue`,getProjects);
-router.get(`/getSearchResults/:text/:sort`,getSearchedResults);
+router.get(`/getSearchResults/:text/:sort`,checkToken,getSearchedResults);
 router.post("/login",loginUser);
-router.patch("/updateStatus",updateProjectStatus);
-router.get("/getCharts",getChartsData);
-router.get("/getCounts",getCounts);
-router.get("/getDropdownData",getDropdownData);
+router.patch("/updateStatus",checkToken,updateProjectStatus);
+router.get("/getCharts",checkToken,getChartsData);
+router.get("/getCounts",checkToken,getCounts);
+router.get("/getDropdownData",checkToken,getDropdownData);
 
 module.exports=router;

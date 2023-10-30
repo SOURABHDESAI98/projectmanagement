@@ -98,48 +98,96 @@ module.exports = {
             }
         )
     },
-    getChartsTotal: callBack => {
+    // getChartsTotal: callBack => {
 
-        pool.query(
-            `call findTotalProjects()`,
-            [],
+    //     pool.query(
+    //         `call findTotalProjects()`,
+    //         [],
 
-            (error, results, fields) => {
-                if (error) {
-                    return callBack(error);
+    //         (error, results, fields) => {
+    //             if (error) {
+    //                 return callBack(error);
+    //             }
+    //             return callBack(null, results);//use for each method for results and pass array of values from here
+    //         }
+    //     )
+    // },
+    // getChartsClosed: callBack => {
+
+    //     pool.query(
+    //         `call findClosedProjects()`,
+    //         [],
+
+    //         (error, results, fields) => {
+    //             if (error) {
+    //                 return callBack(error);
+    //             }
+    //             return callBack(null, results);//use for each method for results and pass array of values from here
+    //         }
+    //     )
+    // },
+
+    getChartsData: callBack => {
+
+            pool.query(
+                `SELECT
+                COUNT(CASE WHEN p.psid = 73 THEN 1 ELSE NULL END) AS chartsClosed,
+                COUNT(*) AS chartsTotal
+            FROM
+                projectinfo p
+            JOIN
+                projectdept pd ON p.pdid = pd.pdid
+            WHERE
+                pd.pdid BETWEEN 61 AND 66
+            GROUP BY
+                pd.pdid
+            ORDER BY
+                pd.pdid;`,
+                [],
+    
+                (error, results, fields) => {
+                    if (error) {
+                        return callBack(error);
+                    }
+                    return callBack(null, results);//use for each method for results and pass array of values from here
                 }
-                return callBack(null, results);//use for each method for results and pass array of values from here
-            }
-        )
-    },
-    getChartsClosed: callBack => {
+            )
+        },
 
-        pool.query(
-            `call findClosedProjects()`,
-            [],
-
-            (error, results, fields) => {
-                if (error) {
-                    return callBack(error);
-                }
-                return callBack(null, results);//use for each method for results and pass array of values from here
-            }
-        )
-    },
     getCounts: callBack => {
 
         pool.query(
-            `call findAllCounts()`,
+            `SELECT COUNT(*) AS total,
+            SUM(CASE WHEN psid = 73 THEN 1 ELSE 0 END) AS  closed,
+             SUM(CASE WHEN psid = 74 THEN 1 ELSE 0 END) AS cancelled,
+                SUM(CASE WHEN psid = 72 THEN 1 ELSE 0 END) AS running FROM projectinfo`,
             [],
 
             (error, results, fields) => {
                 if (error) {
                     return callBack(error);
                 }
-                return callBack(null, results);//use for each method for results and pass array of values from here
+                return callBack(null, results);
             }
-        )
+        );
+
+
     },
+    getClosureDelay: callBack => {
+
+        pool.query(
+            ` select count(*) as closure from projectinfo where datediff(curdate(),proenddate)>'0000-00-01' and psid=72`,
+            [],
+
+            (error, results, fields) => {
+                if (error) {
+                    return callBack(error);
+                }
+                return callBack(null, results);
+            }
+        );
+    },
+
     //for getDropdownData
 
     getDropdownData: callBack => {

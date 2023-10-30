@@ -1,8 +1,9 @@
-const { create, getProjects, loginUser, updateProjectStatus, getChartsTotal, getChartsClosed, getCounts, getSearchedResults, getReasonDropdown, getTypeDropdown, getDivisionDropdown, getCategoryDropdown, getPriorityDropdown, getDepartmentDropdown, getLocationDropdown, getDropdownData } = require("./service");
+const { create, getProjects, loginUser, updateProjectStatus, getChartsTotal, getChartsClosed, getCounts, getSearchedResults, getDropdownData, getChartsData, getClosureDelay } = require("./service");
 let chartsObj;
 let totalProjects;
 
 let reason, type, division, category, priority, department, location;
+const { sign } = require('jsonwebtoken');
 
 module.exports = {
     createProject: (req, res) => { // req comes from axios.post("link",object), this object is req.body
@@ -29,7 +30,7 @@ module.exports = {
                 console.log(err);
                 return;
             }
-            console.log("user login result :", results);
+            console.log("user login result :", results[0]);
             if (!results[0]) {
                 return res.json({
                     success: false,
@@ -37,12 +38,28 @@ module.exports = {
                 });
             }
 
-            return res.json(
-                {
-                    success: true,
-                    message: "login successfully"
-                }
-            );
+            if (results[0]) {
+                results[0].upass = undefined; // to avoid sharing password in jsonwebtoken
+                const jsontoken = sign({ result: results[0] }, "qwe1234", {
+                    expiresIn: "1h"
+                });
+
+                return res.json(
+                    {
+                        success: true,
+                        message: "login successfully",
+                        token: jsontoken
+                    }
+                );
+            }
+
+
+            // return res.json(
+            //     {
+            //         success: true,
+            //         message: "login successfully"
+            //     }
+            // );
         });
     },
     getProjects: (req, res) => {
@@ -116,52 +133,96 @@ module.exports = {
         });
     },
     getChartsData: (req, res) => {
-        getChartsTotal((err, results) => {
+        // getChartsTotal((err, results) => {
+        //     if (err) {
+        //         console.log(err);
+        //         return;
+        //     }
+        //     //  totalProjects=results;
+
+        //     chartsObj = {
+        //         chartsTotal: results,//this should be array of values
+        //         chartsClosed: null,
+        //     }
+
+        //     // return res.json(results);
+
+        // });
+
+        // getChartsClosed((err, results) => {
+        //     if (err) {
+        //         console.log(err);
+        //         return;
+        //     }
+        //     chartsObj = {
+        //         ...chartsObj,//this should be array of values
+        //         chartsClosed: results,//this should be array of values
+        //     }
+
+        //     let arr1 = chartsObj.chartsTotal
+        //         .filter(Array.isArray)
+        //         .map(subArr => subArr[0].chartsTotal);
+
+        //     let arr2 = chartsObj.chartsClosed
+        //         .filter(Array.isArray)
+        //         .map(subArr => subArr[0].chartsClosed);
+
+        //     let resultObj = {
+        //         chartsTotal: arr1,
+        //         chartsClosed: arr2
+        //     } // return json object if this does not work 
+
+        //     console.log(resultObj);
+        //     return res.json(resultObj);//it should be object having chartsTotal,chartsClosed keys containing array of values 
+
+        // });
+
+
+        getChartsData((err, results) => {
             if (err) {
                 console.log(err);
                 return;
             }
-            //  totalProjects=results;
+            //  console.log(results);// this is array having objects for each dept, keys are chartsClosed and chartsTotal
 
-            chartsObj = {
-                chartsTotal: results,//this should be array of values
-                chartsClosed: null,
-            }
 
-            // return res.json(results);
+            const arr1 = results.map(item => item.chartsTotal);
+            const arr2 = results.map(item => item.chartsClosed);
 
-        });
+            console.log('chartsTotal:', arr1);
+            console.log('chartsClosed:', arr2);
 
-        getChartsClosed((err, results) => {
-            if (err) {
-                console.log(err);
-                return;
-            }
-            chartsObj = {
-                ...chartsObj,//this should be array of values
-                chartsClosed: results,//this should be array of values
-            }
-
-            let arr1 = chartsObj.chartsTotal
-                .filter(Array.isArray)
-                .map(subArr => subArr[0].chartsTotal);
-
-            let arr2 = chartsObj.chartsClosed
-                .filter(Array.isArray)
-                .map(subArr => subArr[0].chartsClosed);
 
             let resultObj = {
-                chartsTotal: arr1,
-                chartsClosed: arr2
-            } // return json object if this does not work 
+                chartsTotal: arr1,//this is array
+                chartsClosed: arr2 // this is array
+            }
 
-            console.log(resultObj);
-            return res.json(resultObj);//it should be object having chartsTotal,chartsClosed keys containing array of values 
+            return res.json(resultObj);
 
         });
     },
 
     getCounts: (req, res) => {
+
+        let countsArray;
+
+        // getCounts((err, results) => {
+        //     if (err) {
+        //         console.log(err);
+        //         return;
+        //     }
+
+
+        //     const countsArray = results.slice(0, 5).map(item => {
+        //         return Object.values(item[0])[0];
+        //     });
+
+        //     console.log(countsArray);
+        //     return res.json(countsArray);
+        //     // return res.json(results);
+        // });
+
         getCounts((err, results) => {
             if (err) {
                 console.log(err);
@@ -169,14 +230,27 @@ module.exports = {
             }
 
 
-            const countsArray = results.slice(0, 5).map(item => {
-                return Object.values(item[0])[0];
-            });
+            // const countsArray = results.slice(0, 4).map(item => {
+            //     return Object.values(item[0])[0];
+            // });
 
-            console.log(countsArray);
-            return res.json(countsArray);
-            // return res.json(results);
+             countsArray = Object.values(results[0]);
+
+            console.log(countsArray);// array of all counts except closure delay
         });
+
+        getClosureDelay((err, results) => {
+            if (err) {
+                console.log(err);
+                return;
+            }
+            console.log(results[0].closure);// to get value of closure delay
+            countsArray.push(results[0].closure);// pushing closure delay into array of counts
+            console.log(countsArray);
+            return res.json(countsArray);// array of all counts with closure delay
+
+        });
+
     },
     getDropdownData: (req, res) => {
 
@@ -186,17 +260,17 @@ module.exports = {
                 return;
             }
             let dropdownObj = {
-                        reason: results[0],
-                        type: results[1],
-                        division: results[2],
-                        category: results[3],
-                        priority: results[4],
-                        department: results[5],
-                        location:results[6]
-                    }
+                reason: results[0],
+                type: results[1],
+                division: results[2],
+                category: results[3],
+                priority: results[4],
+                department: results[5],
+                location: results[6]
+            }
 
 
-            return res.json( dropdownObj);
+            return res.json(dropdownObj);
         });
 
     }
