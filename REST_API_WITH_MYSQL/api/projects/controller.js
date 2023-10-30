@@ -53,13 +53,6 @@ module.exports = {
                 );
             }
 
-
-            // return res.json(
-            //     {
-            //         success: true,
-            //         message: "login successfully"
-            //     }
-            // );
         });
     },
     getProjects: (req, res) => {
@@ -133,51 +126,7 @@ module.exports = {
         });
     },
     getChartsData: (req, res) => {
-        // getChartsTotal((err, results) => {
-        //     if (err) {
-        //         console.log(err);
-        //         return;
-        //     }
-        //     //  totalProjects=results;
-
-        //     chartsObj = {
-        //         chartsTotal: results,//this should be array of values
-        //         chartsClosed: null,
-        //     }
-
-        //     // return res.json(results);
-
-        // });
-
-        // getChartsClosed((err, results) => {
-        //     if (err) {
-        //         console.log(err);
-        //         return;
-        //     }
-        //     chartsObj = {
-        //         ...chartsObj,//this should be array of values
-        //         chartsClosed: results,//this should be array of values
-        //     }
-
-        //     let arr1 = chartsObj.chartsTotal
-        //         .filter(Array.isArray)
-        //         .map(subArr => subArr[0].chartsTotal);
-
-        //     let arr2 = chartsObj.chartsClosed
-        //         .filter(Array.isArray)
-        //         .map(subArr => subArr[0].chartsClosed);
-
-        //     let resultObj = {
-        //         chartsTotal: arr1,
-        //         chartsClosed: arr2
-        //     } // return json object if this does not work 
-
-        //     console.log(resultObj);
-        //     return res.json(resultObj);//it should be object having chartsTotal,chartsClosed keys containing array of values 
-
-        // });
-
-
+       
         getChartsData((err, results) => {
             if (err) {
                 console.log(err);
@@ -207,32 +156,11 @@ module.exports = {
 
         let countsArray;
 
-        // getCounts((err, results) => {
-        //     if (err) {
-        //         console.log(err);
-        //         return;
-        //     }
-
-
-        //     const countsArray = results.slice(0, 5).map(item => {
-        //         return Object.values(item[0])[0];
-        //     });
-
-        //     console.log(countsArray);
-        //     return res.json(countsArray);
-        //     // return res.json(results);
-        // });
-
         getCounts((err, results) => {
             if (err) {
                 console.log(err);
                 return;
             }
-
-
-            // const countsArray = results.slice(0, 4).map(item => {
-            //     return Object.values(item[0])[0];
-            // });
 
              countsArray = Object.values(results[0]);
 

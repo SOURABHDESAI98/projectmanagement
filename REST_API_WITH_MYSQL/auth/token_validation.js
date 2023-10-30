@@ -2,7 +2,7 @@ const {verify}=require("jsonwebtoken");
 
 module.exports={
     checkToken:(req,res,next)=>{
-        let token=req.get("authorization");
+        let token=req.get("authorization");// key of header 
         if(token){
                 token=token.slice(7);//to remove bearer from token, bearer has 6 words and 1 space after that
                 

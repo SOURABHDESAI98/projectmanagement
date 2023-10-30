@@ -98,35 +98,7 @@ module.exports = {
             }
         )
     },
-    // getChartsTotal: callBack => {
-
-    //     pool.query(
-    //         `call findTotalProjects()`,
-    //         [],
-
-    //         (error, results, fields) => {
-    //             if (error) {
-    //                 return callBack(error);
-    //             }
-    //             return callBack(null, results);//use for each method for results and pass array of values from here
-    //         }
-    //     )
-    // },
-    // getChartsClosed: callBack => {
-
-    //     pool.query(
-    //         `call findClosedProjects()`,
-    //         [],
-
-    //         (error, results, fields) => {
-    //             if (error) {
-    //                 return callBack(error);
-    //             }
-    //             return callBack(null, results);//use for each method for results and pass array of values from here
-    //         }
-    //     )
-    // },
-
+   
     getChartsData: callBack => {
 
             pool.query(
