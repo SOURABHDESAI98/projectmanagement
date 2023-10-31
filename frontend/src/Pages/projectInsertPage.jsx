@@ -8,6 +8,7 @@ import { createNewProject } from '../Redux/project/Action';
 import { useNavigate } from 'react-router-dom';
 import BottomNavbar from '../Components/BottomNavbar';
 import { getDropdownData } from '../Redux/project/Action';
+import setAuthenticationHeader from '../utlility/authenticate';
 
 const InsertProjectComponent = () => {
     const dispatch = useDispatch();
@@ -42,6 +43,9 @@ const InsertProjectComponent = () => {
     }
 
     useEffect(() => {
+        let token=localStorage.getItem('jsonwebtoken');
+        setAuthenticationHeader(token);
+        
         const updateDimension = () => {
             setScreenSize(getCurrentDimension())
         }

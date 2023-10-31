@@ -30,6 +30,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getAllData, searchData, updateProjectStatus } from '../Redux/project/Action';
 import { PaginationComponent } from '../Components/PaginationComponent';
 import BottomNavbar from '../Components/BottomNavbar';
+import setAuthenticationHeader from '../utlility/authenticate';
 
 
 const ProjectListComponent = () => {
@@ -57,6 +58,10 @@ const ProjectListComponent = () => {
     }
 
     useEffect(() => {
+
+        let token=localStorage.getItem('jsonwebtoken');
+        setAuthenticationHeader(token);
+
         const updateDimension = () => {
             setScreenSize(getCurrentDimension())
         }

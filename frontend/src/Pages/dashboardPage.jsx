@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getSliderCounts, getChartsData } from '../Redux/project/Action';
 import Highcharts, { chart } from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
+import setAuthenticationHeader from '../utlility/authenticate';
 
 import "../styles/dashboardPage.css";
 import BottomNavbar from '../Components/BottomNavbar';
@@ -28,6 +29,10 @@ const DashboardComponent = () => {
     }
 
     useEffect(() => {
+        let token=localStorage.getItem('jsonwebtoken');
+        setAuthenticationHeader(token);
+
+
         const updateDimension = () => {
             setScreenSize(getCurrentDimension())
         }
