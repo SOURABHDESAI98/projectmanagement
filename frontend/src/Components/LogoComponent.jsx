@@ -24,7 +24,7 @@ const LogoComponent = ({ title, path, screenWidth }) => {
                             <IoIosArrowBack size={'25px'} />
                             <Link to={path}><Text>{title}</Text></Link>
                         </Box>
-                        <Box><Link to="/"><Image src='/images/Logout.svg' alt="logout-img" width={"30px"}/></Link></Box>
+                        <Box><Link to="/"><Image onClick={()=>{localStorage.removeItem('jsonwebtoken')}} src='/images/Logout.svg' alt="logout-img" width={"30px"}/></Link></Box>
                     </Box>
             }
         </div>

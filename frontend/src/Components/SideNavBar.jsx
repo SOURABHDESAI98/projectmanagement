@@ -21,7 +21,7 @@ const SideNavBar = ({ src1, src2, src3, prop1, prop2, prop3, prop4, prop5, prop6
                 </Box>
             </Box>
             <Box cursor={'pointer'}>
-                <Link to={'/'}><Image src='/images/Logout.jpg' alt='logout-icon' width={'30px'} /></Link>
+                <Link to={'/'}><Image onClick={()=>{localStorage.removeItem('jsonwebtoken')}} src='/images/Logout.jpg' alt='logout-icon' width={'30px'} /></Link>
             </Box>
         </Box>
     );

@@ -9,6 +9,11 @@ const LoginComponent = () => {
     const [show, setShow] = useState(false);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+
+    const [emailTouch, setEmailTouch] = useState("");//for validation
+    const [passTouch, setPassTouch] = useState("");//for validation
+
+
     const navigate = useNavigate()
     const dispatch = useDispatch();
     const { message } = useSelector(store => store.user)
@@ -44,12 +49,20 @@ const LoginComponent = () => {
 
     const handleLoginSubmit = async (e) => {
         e.preventDefault();
-        const obj = {
-            uemail: email,
-            upass: password
+
+        if(email==="" || password===""){
+            setEmailTouch("touched");//avoiding api calls on submit if pass & email is empty
+            setPassTouch("touched");
+
+        }else{
+            const obj = {
+                uemail: email,
+                upass: password
+            }
+            console.log("login");
+            dispatch(loginUser(obj, navigate))
+
         }
-        console.log("login");
-        dispatch(loginUser(obj, navigate))
     }
 
     return (
@@ -67,21 +80,21 @@ const LoginComponent = () => {
                 <br />
                 <form className='form' onSubmit={handleLoginSubmit}>
                     <label>Email</label>
-                    <Input variant="unstyled" type='email' placeholder='' value={email} onChange={(e) => setEmail(e.target.value)} backgroundColor={{ sm: "transparent", md: "transparent", base: "transparent", lg: "white", xl: "white" }} outline="0 !important" border="none" _focus={{ outline: "0 !important", border: "none" }} />
-                    {email === "" ? <Text className='error-label' fontSize={'15px'}>Email is required</Text> : null}
+                    <Input variant="unstyled" onBlur={()=>{setEmailTouch("touched")}} type='email' placeholder='' value={email} onChange={(e) => setEmail(e.target.value)} backgroundColor={{ sm: "transparent", md: "transparent", base: "transparent", lg: "white", xl: "white" }} outline="0 !important" border="none" _focus={{ outline: "0 !important", border: "none" }} />
+                    {email === "" && emailTouch==="touched"  ? <Text className='error-label' fontSize={'15px'}>Email is required</Text> : null}
                     <br />
                     <label>Password</label>
                     <div className='password-div'>
-                        <Input variant="unstyled" type={show ? "text" : "password"} placeholder='' value={password} onChange={(e) => setPassword(e.target.value)} backgroundColor={{ sm: "transparent", md: "transparent", base: "transparent", lg: "white", xl: "white" }} pl={"5px"} />
+                        <Input variant="unstyled" onBlur={()=>{setPassTouch("touched")}} type={show ? "text" : "password"} placeholder='' value={password} onChange={(e) => setPassword(e.target.value)} backgroundColor={{ sm: "transparent", md: "transparent", base: "transparent", lg: "white", xl: "white" }} pl={"5px"} />
                         <span onClick={togglePassword}><img src='/images/hide-password.jpg' alt='icons-img' width={"20px"} /></span>
                     </div>
                     <div style={{display:"flex",justifyContent:"space-between",marginBottom:"5px"}}>
-                       {password === "" ? <Text className='error-label' fontSize={'15px'}>Password is required</Text> : null}
+                       {password === "" && passTouch==="touched" ? <Text className='error-label' fontSize={'15px'}>Password is required</Text> : null}
                    <span onClick={()=>{alert("check your email to change password")}} style={{color:"#4871f7", fontSize:"14px"}}>Forgot password?</span>  
                     </div>
                     <br />
                     {message === "Invalid User" && screenSize.width<=640 || message === "Invalid Password" && screenSize.width<=640 ? <Text textAlign={'start'} mb={"5px"} fontSize={'15px'} color={'red'}>Invalid Credentials</Text> : null}
-                    <Input type='submit' disabled={password.length<=5 || email.length===0} value={'Login'} cursor={"pointer"} width={{ sm: "100%", md: "100%", base: "100%", lg: "150px", xl: "150px" }} p={{ sm: "0px", md: "0px", base: "0px", lg: "5px 20px", xl: "5px 20px" }} m={{ sm: "", md: "", base: "", lg: "auto", xl: "auto" }} borderRadius={"20px"} backgroundColor={"#4871f7"} color={"white"} />
+                    <Input type='submit' value={'Login'} cursor={"pointer"} width={{ sm: "100%", md: "100%", base: "100%", lg: "150px", xl: "150px" }} p={{ sm: "0px", md: "0px", base: "0px", lg: "5px 20px", xl: "5px 20px" }} m={{ sm: "", md: "", base: "", lg: "auto", xl: "auto" }} borderRadius={"20px"} backgroundColor={"#4871f7"} color={"white"} />
 
                     <br />
                 </form>

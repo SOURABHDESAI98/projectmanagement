@@ -14,6 +14,22 @@ const InsertProjectComponent = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [error, setError] = useState("");
+    const [themeTouch, setThemeTouch] = useState("");
+    const [startDateTouch, setStartDateTouch] = useState("");
+    const [endDateTouch, setEndDateTouch] = useState("");
+
+    const [reasonTouch, setReasonTouch] = useState("");
+    const [typeTouch, setTypeTouch] = useState("");
+    const [divisionTouch, setDivisionTouch] = useState("");
+    const [categoryTouch, setCategoryTouch] = useState("");
+    const [priorityTouch, setPriorityTouch] = useState("");
+    const [departmentTouch, setDepartmentTouch] = useState("");
+    const [locationTouch, setLocationTouch] = useState("");
+
+
+
+
+
     const { dropdownObject } = useSelector(store => store.project);
 
     console.log(dropdownObject);
@@ -71,32 +87,48 @@ const InsertProjectComponent = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        let start = formData.start_date.split("-");
-        let end = formData.end_date.split("-");
-        let syear = +start[0];
-        let smonth = +start[1];
-        let sdate = +start[2];
-        let eyear = +end[0];
-        let emonth = +end[1];
-        let edate = +end[2];
-        if (syear > eyear) {
-            setError("End year must be greater than or same as start year")
-        }
-        else if (syear <= eyear) {
-            if (smonth > emonth && syear === eyear) {
-                setError("End month must be greater than start month")
+
+        let {reason,type,division,category,priority,department,location}=formData;
+
+        if(reason===""||type===""||division===""||category===""||priority===""||department===""||location===""){
+
+            if(reason===""){setReasonTouch("touched")}
+            if(type===""){setTypeTouch("touched")}
+            if(division===""){setDivisionTouch("touched")}
+            if(category===""){setCategoryTouch("touched")}
+            if(priority===""){setPriorityTouch("touched")}
+            if(department===""){setDepartmentTouch("touched")}
+            if(location===""){setLocationTouch("touched")}
+            setThemeTouch("touched");
+
+        }else{
+            let start = formData.start_date.split("-");
+            let end = formData.end_date.split("-");
+            let syear = +start[0];
+            let smonth = +start[1];
+            let sdate = +start[2];
+            let eyear = +end[0];
+            let emonth = +end[1];
+            let edate = +end[2];
+            if (syear > eyear) {
+                setError("End year must be greater than or same as start year")
             }
-            else {
-                if (sdate > edate && syear === eyear && smonth === emonth) {
-                    setError("End date must be greater than start date");
+            else if (syear <= eyear) {
+                if (smonth > emonth && syear === eyear) {
+                    setError("End month must be greater than start month")
                 }
                 else {
-                    console.log(formData);
-                    dispatch(createNewProject(formData, navigate));
+                    if (sdate > edate && syear === eyear && smonth === emonth) {
+                        setError("End date must be greater than start date");
+                    }
+                    else {
+                        console.log(formData);
+                        dispatch(createNewProject(formData, navigate));
+                    }
                 }
             }
-        }
 
+        }
     }
 
 
@@ -120,10 +152,11 @@ const InsertProjectComponent = () => {
                                         border={'none'}
                                         _focus={{ outline: 'none' }}
                                         name="theme"
+                                        onBlur={()=>{setThemeTouch("touched")}}
                                         value={formData.theme}
                                         onChange={(e) => handleChange(e)}
                                     />
-                                    {formData.theme === "" ? <Text color={"red"}>Theme required</Text> : null}
+                                    {formData.theme === "" && themeTouch==="touched"  ? <Text color={"red"}>Theme required</Text> : null}
                                 </Box>
 
                                 {screenSize.width > 640 ? <Button borderRadius={'50px'} p={'0px 40px'} backgroundColor={'#1b5cbf'} color={'lightgray'} _hover={{ backgroundColor: '#1b5cbf', color: 'lightgray' }} onClick={handleSubmit}>Save Project</Button> : null}
@@ -137,6 +170,7 @@ const InsertProjectComponent = () => {
                                         _focus={{ outline: 'none' }}
                                         name="reason"
                                         value={formData.reason}
+                                        onBlur={()=>{setReasonTouch("touched")}}
                                         onChange={(e) => handleChange(e)}
                                     >
                                         {/* <option value={11}>For Buisness</option>
@@ -149,6 +183,7 @@ const InsertProjectComponent = () => {
                                             return <option key={index} value={ele.prid}>For {ele.prname}</option>
                                         })}
                                     </Select>
+                                    {formData.reason==="" && reasonTouch==="touched" ? <Text color="red" fontSize={'15px'}>Reason is required</Text> : null  }
                                 </Box>
                                 <Box>
                                     <label className='label-insert'>Type</label>
@@ -158,6 +193,7 @@ const InsertProjectComponent = () => {
                                         _focus={{ outline: 'none' }}
                                         name="type"
                                         value={formData.type}
+                                        onBlur={()=>{setTypeTouch("touched")}}
                                         onChange={(e) => handleChange(e)}
                                     >
                                         {/* <option value={101}>External</option>
@@ -169,6 +205,7 @@ const InsertProjectComponent = () => {
                                             return <option key={index} value={ele.ptid}>{ele.ptname}</option>
                                         })}
                                     </Select>
+                                    {formData.type==="" && typeTouch==="touched" ? <Text color="red" fontSize={'15px'}>Type is required</Text> : null  }
                                 </Box>
                                 <Box>
                                     <label className='label-insert'>Division</label>
@@ -178,6 +215,7 @@ const InsertProjectComponent = () => {
                                         _focus={{ outline: 'none' }}
                                         name="division"
                                         value={formData.division}
+                                        onBlur={()=>{setDivisionTouch("touched")}}
                                         onChange={(e) => handleChange(e)}
                                     >
                                         {/* <option value={41}>Filters</option>
@@ -190,6 +228,7 @@ const InsertProjectComponent = () => {
                                             return <option key={index} value={ele.pdivid}>{ele.pdivname}</option>
                                         })}
                                     </Select>
+                                    {formData.division==="" && divisionTouch==="touched" ? <Text color="red" fontSize={'15px'}>Division is required</Text> : null  }
                                 </Box>
                                 <Box>
                                     <label className='label-insert'>Category</label>
@@ -199,6 +238,7 @@ const InsertProjectComponent = () => {
                                         _focus={{ outline: 'none' }}
                                         name="category"
                                         value={formData.category}
+                                        onBlur={()=>{setCategoryTouch("touched")}}
                                         onChange={(e) => handleChange(e)}
                                     >
                                         {/* <option value={31}>Quality A</option>
@@ -210,6 +250,7 @@ const InsertProjectComponent = () => {
                                             return <option key={index} value={ele.pcid}>{ele.pcname}</option>
                                         })}
                                     </Select>
+                                    {formData.category==="" && categoryTouch==="touched" ? <Text color="red" fontSize={'15px'}>Category is required</Text> : null  }
                                 </Box>
                                 <Box>
                                     <label className='label-insert'>Priority</label>
@@ -219,6 +260,7 @@ const InsertProjectComponent = () => {
                                         _focus={{ outline: 'none' }}
                                         name="priority"
                                         value={formData.priority}
+                                        onBlur={()=>{setPriorityTouch("touched")}}
                                         onChange={(e) => handleChange(e)}
                                     >
                                         {/* <option value={21}>High</option>
@@ -229,6 +271,7 @@ const InsertProjectComponent = () => {
                                             return <option key={index} value={ele.ppid}>{ele.ppname}</option>
                                         })}
                                     </Select>
+                                    {formData.priority==="" && priorityTouch==="touched" ? <Text color="red" fontSize={'15px'}>Priority is required</Text> : null  }
                                 </Box>
                                 <Box>
                                     <label className='label-insert'>Department</label>
@@ -238,6 +281,7 @@ const InsertProjectComponent = () => {
                                         _focus={{ outline: 'none' }}
                                         name="department"
                                         value={formData.department}
+                                        onBlur={()=>{setDepartmentTouch("touched")}}
                                         onChange={(e) => handleChange(e)}
                                     >
                                         {/* <option value={61}>Strategy</option>
@@ -251,6 +295,7 @@ const InsertProjectComponent = () => {
                                             return <option key={index} value={ele.pdid}>{ele.pdname}</option>
                                         })}
                                     </Select>
+                                    {formData.department==="" && departmentTouch==="touched" ? <Text color="red" fontSize={'15px'}>Department is required</Text> : null  }
                                 </Box>
                                 <Box>
                                     <label className='label-insert'>Start Date as per Project Plan</label>
@@ -259,8 +304,8 @@ const InsertProjectComponent = () => {
                                             border={'none'}
                                             mt={'5px'}
                                             _focus={{ outline: 'none' }} name="start_date"
-                                            value={formData.start_date} onChange={(e) => handleChange(e)} />
-                                        {formData.start_date === "" ? <Text color={"red"} fontSize={"14px"}>Start Date Require</Text> : null}
+                                            value={formData.start_date} onBlur={()=>{setStartDateTouch("touched")}}  onChange={(e) => handleChange(e)} />
+                                        {formData.start_date === "" && startDateTouch==="touched"  ? <Text color={"red"} fontSize={"14px"}>Start Date Require</Text> : null}
                                     </Box>
                                 </Box>
                                 <Box>
@@ -271,8 +316,8 @@ const InsertProjectComponent = () => {
                                             mt={'5px'}
                                             _focus={{ outline: 'none' }}
                                             name="end_date"
-                                            value={formData.end_date} onChange={(e) => handleChange(e)} />
-                                        {formData.end_date === "" ? <Text color={"red"} fontSize={"14px"}>End Date Require</Text> : null}
+                                            value={formData.end_date} onBlur={()=>{setEndDateTouch("touched")}} onChange={(e) => handleChange(e)} />
+                                        {formData.end_date === "" && endDateTouch==="touched"  ? <Text color={"red"} fontSize={"14px"}>End Date Require</Text> : null}
                                         {error !== "" ? <Text color={"red"} fontSize={"14px"}>{error}</Text> : null}
                                     </Box>
                                 </Box>
@@ -284,6 +329,7 @@ const InsertProjectComponent = () => {
                                         _focus={{ outline: 'none' }}
                                         name="location"
                                         value={formData.location}
+                                        onBlur={()=>{setLocationTouch("touched")}}
                                         onChange={(e) => handleChange(e)}
                                     >
                                         {/* <option value={51}>Pune</option>
@@ -295,6 +341,7 @@ const InsertProjectComponent = () => {
                                             return <option key={index} value={ele.plid}>{ele.plname}</option>
                                         })}
                                     </Select>
+                                    {formData.location==="" && locationTouch==="touched" ? <Text color="red" fontSize={'15px'}>Location is required</Text> : null  }
                                 </Box>
 
                             </SimpleGrid>

@@ -51,24 +51,97 @@ module.exports = {
         )
     },
     getSearchedResults: (textInput, sort, callBack) => {
-        let query = `select p.proname,p.prostartdate,p.proenddate,pr.prname,pt.ptname,pdiv.pdivname,pc.pcname,pp.ppname,pd.pdname,pl.plname,ps.psname
-      from projectinfo p join projectreason pr join projecttype pt join projectdivison pdiv join projectcategory pc 
-      join projectpriority pp join projectdept pd join projectlocation pl join projectstatus ps
-      where p.prid=pr.prid and p.ptid=pt.ptid and p.pdivid=pdiv.pdivid and p.pcid=pc.pcid and p.ppid=pp.ppid
-      and p.pdid=pd.pdid and p.plid=pl.plid and p.psid=ps.psid and p.proname like '${textInput}' order by ${sort}`;
+    //     let query = `select p.proname,p.prostartdate,p.proenddate,pr.prname,pt.ptname,pdiv.pdivname,pc.pcname,pp.ppname,pd.pdname,pl.plname,ps.psname
+    //   from projectinfo p join projectreason pr join projecttype pt join projectdivison pdiv join projectcategory pc 
+    //   join projectpriority pp join projectdept pd join projectlocation pl join projectstatus ps
+    //   where p.prid=pr.prid and p.ptid=pt.ptid and p.pdivid=pdiv.pdivid and p.pcid=pc.pcid and p.ppid=pp.ppid
+    //   and p.pdid=pd.pdid and p.plid=pl.plid and p.psid=ps.psid and p.proname like '${textInput}' order by ${sort}`;
 
-        pool.query(
-            query,
-            [textInput, sort],
-            (error, results, fields) => {
-                if (error) {
-                    return callBack(error);
-                }
-                //  console.log(query);
-                //   console.log("service file object",results);
-                return callBack(null, results);
-            }
-        )
+    //     pool.query(
+    //         query,
+    //         [textInput, sort],
+    //         (error, results, fields) => {
+    //             if (error) {
+    //                 return callBack(error);
+    //             }
+    //             //  console.log(query);
+    //             //   console.log("service file object",results);
+    //             return callBack(null, results);
+    //         }
+    //     )
+
+
+
+    // to get searched results for all columns
+    let query = `SELECT p.proname, p.prostartdate, p.proenddate, pr.prname, pt.ptname, pdiv.pdivname, pc.pcname, pp.ppname, pd.pdname, pl.plname, ps.psname
+    FROM projectinfo p
+    JOIN projectreason pr ON p.prid = pr.prid
+    JOIN projecttype pt ON p.ptid = pt.ptid
+    JOIN projectdivison pdiv ON p.pdivid = pdiv.pdivid
+    JOIN projectcategory pc ON p.pcid = pc.pcid
+    JOIN projectpriority pp ON p.ppid = pp.ppid
+    JOIN projectdept pd ON p.pdid = pd.pdid
+    JOIN projectlocation pl ON p.plid = pl.plid
+    JOIN projectstatus ps ON p.psid = ps.psid
+    WHERE p.proname IN (
+        SELECT proname
+        FROM projectinfo
+        WHERE proname LIKE '${textInput}'
+    )
+    or p.prid IN (
+        SELECT prid
+        FROM projectreason
+        WHERE prname LIKE '${textInput}'
+    )
+    or p.ptid IN (
+        SELECT ptid
+        FROM projecttype
+        WHERE ptname LIKE '${textInput}'
+    )
+    or p.psid IN (
+        SELECT psid
+        FROM projectstatus
+        WHERE psname LIKE '${textInput}'
+    )
+    or p.pdid IN (
+        SELECT pdid
+        FROM projectdept
+        WHERE pdname LIKE '${textInput}'
+    )
+    or p.pdivid IN (
+        SELECT pdivid
+        FROM projectdivison
+        WHERE pdivname LIKE '${textInput}'
+    )
+    or p.plid IN (
+        SELECT plid
+        FROM projectlocation
+        WHERE plname LIKE '${textInput}'
+    )
+    or p.ppid IN (
+        SELECT ppid
+        FROM projectpriority
+        WHERE ppname LIKE '${textInput}'
+    )
+    or p.pcid IN (
+        SELECT pcid
+        FROM projectcategory
+        WHERE pcname LIKE '${textInput}'
+    ) order by ${sort}`;
+
+      pool.query(
+          query,
+          [textInput, sort],
+          (error, results, fields) => {
+              if (error) {
+                  return callBack(error);
+              }
+              //  console.log(query);
+              //   console.log("service file object",results);
+              return callBack(null, results);
+          }
+      )
+
     },
 
     loginUser: (data, callBack) => {//working
@@ -121,7 +194,7 @@ module.exports = {
                     if (error) {
                         return callBack(error);
                     }
-                    return callBack(null, results);//use for each method for results and pass array of values from here
+                    return callBack(null, results);// results is a array of objects, each object having chartsTotal and ChartsClosed keys for each department
                 }
             )
         },
@@ -139,7 +212,7 @@ module.exports = {
                 if (error) {
                     return callBack(error);
                 }
-                return callBack(null, results);
+                return callBack(null, results);// results is array of all counts except closure delay
             }
         );
 
